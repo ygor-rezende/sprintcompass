@@ -4,7 +4,7 @@ import Fastify from "fastify";
 import mercurius from "mercurius";
 import { schema } from "./schema.js";
 import { resolvers } from "./resolvers.js";
-//import cors from "@fastify/cors";
+import cors from "@fastify/cors";
 import path from "path";
 import FastifyStatic from "@fastify/static";
 import { fileURLToPath } from "url";
@@ -24,7 +24,7 @@ const app = Fastify();
 //   res.sendFile("index.html");
 // });
 
-//app.register(cors);
+app.register(cors);
 app.register(mercurius, {
   schema,
   resolvers,
