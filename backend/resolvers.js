@@ -18,6 +18,17 @@ const resolvers = {
     let results = await dbRtns.addOne(db, cfg.projectCollection, project);
     return results.acknowledged ? project : null;
   },
+  addBacklog: async (args) => {
+    let db = await dbRtns.getDBInstance();
+    let backlog = {
+      userStoryPortion: args.userStoryPortion,
+      priority: args.priority,
+      relativeEstimate: args.relativeEstimate,
+      estimatedCost: args.estimatedCost,
+    };
+    let results = await dbRtns.addOne(db, cfg.backlogCollection, backlog);
+    return results.acknowledged ? backlog : null;
+  },
 };
 
 export { resolvers };
