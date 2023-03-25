@@ -12,6 +12,7 @@ import {
 import image from "./sprintcompass.jpg";
 import theme from "./theme";
 import "./App.css";
+import Project from "./components/projectClass";
 
 const AddProjectInfo = () => {
   const initialState = {
@@ -31,20 +32,23 @@ const AddProjectInfo = () => {
   const storyPointOptions = [0, 0.5, 1, 2, 3, 5, 8, 13, 21, 34, 55];
 
   const onAddClicked = async () => {
-    let projectInfo = {
-      teamName: state.teamName,
-      productName: state.productName,
-      startDate: state.startDate,
-      numHoursStoryPoint: state.numHoursStoryPoint,
-      estimatedNumStoryPoints: state.estimatedNumStoryPoints,
-      estimatedCost: state.estimatedCost,
-    };
+    let projectInfo = new Project(
+      state.teamName,
+      state.productName,
+      state.startDate,
+      state.numHoursStoryPoint,
+      state.estimatedNumStoryPoints,
+      state.estimatedCost
+    );
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     try {
       let query = JSON.stringify({
-        query: `mutation {addProject(teamName: "${projectInfo.teamName}", productName: "${projectInfo.productName}", startDate: "${projectInfo.startDate}", numHoursStoryPoint: ${projectInfo.numHoursStoryPoint}, estimatedNumStoryPoints: ${projectInfo.estimatedNumStoryPoints}, estimatedCost: ${projectInfo.estimatedCost}){teamName, productName, startDate, numHoursStoryPoint, estimatedNumStoryPoints, estimatedCost} }`,
+        query: `mutation {addProject(teamName: "${projectInfo.teamName}", productName: "${projectInfo.productName}", 
+        startDate: "${projectInfo.startDate}", numHoursStoryPoint: ${projectInfo.numHoursStoryPoint}, 
+        estimatedNumStoryPoints: ${projectInfo.estimatedNumStoryPoints}, estimatedCost: ${projectInfo.estimatedCost})
+        {teamName, productName, startDate, numHoursStoryPoint, estimatedNumStoryPoints, estimatedCost} }`,
       });
       console.log(query);
       let response = await fetch("http://localhost:4000/graphql", {
@@ -58,8 +62,12 @@ const AddProjectInfo = () => {
       setState({
         showMsg: true,
         snackbarMsg: `Added Project Information`,
-        name: "",
-        country: "",
+        teamName: "",
+        productName: "",
+        startDate: "",
+        numHoursStoryPoint: "",
+        estimatedNumStoryPoints: "",
+        estimatedCost: "",
       });
     } catch (error) {
       setState({
@@ -74,7 +82,6 @@ const AddProjectInfo = () => {
       return;
     }
     setState({
-      contactServer: false,
       showMsg: false,
     });
   };
@@ -97,20 +104,23 @@ const AddProjectInfo = () => {
   const handleEstimatedCostInput = (e) => {
     setState({ estimatedCost: e.target.value });
   };
-  const onChange = (e, selectedOption) => {
-    setState({ estimatedNumStoryPoints: selectedOption });
-  };
+  // const onChange = (e, selectedOption) => {
+  //   setState({ estimatedNumStoryPoints: selectedOption });
+  // };
 
   const emptyorundefined =
     state.teamName === undefined ||
     state.teamName === "" ||
     state.productName === undefined ||
-    state.productName === "";
-  state.startDate === undefined || state.startDate === "";
-  state.numHoursStoryPoint === undefined || state.numHoursStoryPoint === "";
-  state.estimatedNumStoryPoints === undefined ||
-    state.estimatedNumStoryPoints === "";
-  state.estimatedCost === undefined || state.estimatedCost === "";
+    state.productName === "" ||
+    state.startDate === undefined ||
+    state.startDate === "" ||
+    state.numHoursStoryPoint === undefined ||
+    state.numHoursStoryPoint === "" ||
+    state.estimatedNumStoryPoints === undefined ||
+    state.estimatedNumStoryPoints === "" ||
+    state.estimatedCost === undefined ||
+    state.estimatedCost === "";
 
   return (
     <ThemeProvider theme={theme}>
