@@ -5,6 +5,10 @@ const resolvers = {
     let db = await dbRtns.getDBInstance();
     return await dbRtns.findAll(db, cfg.projectCollection, {}, {});
   },
+  teamMembers: async () => {
+    let db = await dbRtns.getDBInstance();
+    return await dbRtns.findAll(db, cfg.teamCollection, {}, {});
+  },
   addProject: async (args) => {
     let db = await dbRtns.getDBInstance();
     let project = {
@@ -28,6 +32,15 @@ const resolvers = {
     };
     let results = await dbRtns.addOne(db, cfg.backlogCollection, backlog);
     return results.acknowledged ? backlog : null;
+  },
+  addMember: async (args) => {
+    let db = await dbRtns.getDBInstance();
+    let teamMember = {
+      firstName: args.firstName,
+      lastName: args.lastName,
+    };
+    let results = await dbRtns.addOne(db, cfg.teamCollection, teamMember);
+    return results.acknowledged ? teamMember : null;
   },
 };
 
