@@ -22,6 +22,9 @@ import AddProjectInfo from "./AddProjectInfo";
 import AddBacklogInfo from "./AddBacklogInfo";
 import AddTeamMember from "./AddTeamMember";
 import ListTeamMember from "./ViewTeamMembers";
+import AddHoursWorked from "./AddHoursWorked";
+import AddSprint from "./AddSprint";
+import DisplayBacklog from "./DisplayBacklog";
 
 const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,6 +74,20 @@ const App = () => {
               </MenuItem>
               <MenuItem
                 component={NavLink}
+                to="/displaybacklog"
+                onClick={handleClose}
+              >
+                Display Backlog
+              </MenuItem>
+              <MenuItem
+                component={NavLink}
+                to="/addsprint"
+                onClick={handleClose}
+              >
+                Create a Sprint
+              </MenuItem>
+              <MenuItem
+                component={NavLink}
                 to="/addmember"
                 onClick={handleClose}
               >
@@ -83,6 +100,13 @@ const App = () => {
               >
                 View Team Members
               </MenuItem>
+              <MenuItem
+                component={NavLink}
+                to="/loghours"
+                onClick={handleClose}
+              >
+                Log Hours Worked
+              </MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
@@ -93,6 +117,9 @@ const App = () => {
           <Route path="/addbacklog" element={<AddBacklogInfo />} />
           <Route path="/addmember" element={<AddTeamMember />} />
           <Route path="/listmembers" element={<ListTeamMember />} />
+          <Route path="/loghours" element={<AddHoursWorked />} />
+          <Route path="/addsprint" element={<AddSprint />} />
+          <Route path="/displaybacklog" element={<DisplayBacklog />} />
         </Routes>
       </Router>
     </ThemeProvider>

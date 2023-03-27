@@ -9,6 +9,10 @@ const resolvers = {
     let db = await dbRtns.getDBInstance();
     return await dbRtns.findAll(db, cfg.teamCollection, {}, {});
   },
+  stories: async () => {
+    let db = await dbRtns.getDBInstance();
+    return await dbRtns.findAll(db, cfg.backlogCollection, {}, {});
+  },
   addProject: async (args) => {
     let db = await dbRtns.getDBInstance();
     let project = {
@@ -33,6 +37,16 @@ const resolvers = {
     let results = await dbRtns.addOne(db, cfg.backlogCollection, backlog);
     return results.acknowledged ? backlog : null;
   },
+  addSprint: async (args) => {
+    let db = await dbRtns.getDBInstance();
+    let sprint = {
+      name: args.name,
+      status: args.status,
+      items: args.items,
+    };
+    let results = await dbRtns.addOne(db, cfg.sprintCollection, sprint);
+    return results.acknowledged ? backlog : null;
+  },
   addMember: async (args) => {
     let db = await dbRtns.getDBInstance();
     let teamMember = {
@@ -41,6 +55,19 @@ const resolvers = {
     };
     let results = await dbRtns.addOne(db, cfg.teamCollection, teamMember);
     return results.acknowledged ? teamMember : null;
+  },
+  addSubtask: async (args) => {
+    let db = await dbRtns.getDBInstance();
+    let subtask = {
+      teamName: args.teamName,
+      subtaskName: args.subtaskName,
+      hoursWorked: args.hoursWorked,
+      hoursToComplete: args.hoursToComplete,
+      workInfo: args.workInfo,
+      teamMember: args.teamMember,
+    };
+    let results = await dbRtns.addOne(db, cfg.subtaskCollection, subtask);
+    return results.acknowledged ? subtask : null;
   },
 };
 

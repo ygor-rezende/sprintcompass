@@ -21,6 +21,7 @@ const AddBacklogInfo = () => {
     priority: "",
     relativeEstimate: "",
     relEstimatedCost: "",
+    optionsKey: 1,
   };
 
   const reducer = (state, newState) => ({ ...state, ...newState });
@@ -54,8 +55,11 @@ const AddBacklogInfo = () => {
       setState({
         showMsg: true,
         snackbarMsg: `Added Backlog Information`,
-        name: "",
-        country: "",
+        userStoryPortion: "",
+        priority: "",
+        relativeEstimate: "",
+        relEstimatedCost: "",
+        optionsKey: Math.random(),
       });
     } catch (error) {
       setState({
@@ -131,6 +135,7 @@ const AddBacklogInfo = () => {
             style={{ width: "100%" }}
           />
           <Autocomplete
+            key={state.optionsKey}
             value={state.priority}
             onChange={(event, newValue) => {
               handlePriorty({ target: { value: newValue } });
@@ -150,7 +155,7 @@ const AddBacklogInfo = () => {
           <TextField
             onChange={handleRelEstimatedCostInput}
             placeholder="Estimated Cost"
-            value={state.estimatedCost}
+            value={state.relEstimatedCost}
             style={{ width: "100%" }}
           />
           <p></p>
