@@ -14,11 +14,7 @@ estimatedNumStoryPoints: Float
 estimatedCost: Float
 },
 
-type Sprint {
-    name: String
-    status: String
-    items: String
-},
+
 
 type Subtask {
 teamName: String
@@ -35,6 +31,20 @@ type Backlog{
     relativeEstimate: Float
     estimatedCost: Float
 },
+
+input Story{
+    userStoryPortion: String
+    priority: String
+    relativeEstimate: Float
+    estimatedCost: Float
+}
+
+type Sprint {
+    name: String
+    status: String
+    items: String
+},
+
 
 type TeamMember {
     firstName: String

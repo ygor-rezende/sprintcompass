@@ -45,7 +45,7 @@ const resolvers = {
       items: args.items,
     };
     let results = await dbRtns.addOne(db, cfg.sprintCollection, sprint);
-    return results.acknowledged ? backlog : null;
+    return results.acknowledged ? sprint : null;
   },
   addMember: async (args) => {
     let db = await dbRtns.getDBInstance();
