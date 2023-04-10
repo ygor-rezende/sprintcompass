@@ -93,7 +93,7 @@ const DisplayBacklog = () => {
                             justifyContent: "center",
                         }}
                     >
-                        Backlog
+                        User Stories
                     </Typography>
                     <TableContainer component={Paper}>
                         <Table sx={{ maxWidth: 650 }} aria-label="simple table">

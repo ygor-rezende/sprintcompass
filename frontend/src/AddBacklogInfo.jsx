@@ -126,7 +126,7 @@ const AddBacklogInfo = () => {
               justifyContent: "center",
             }}
           >
-            Add Basic Story Information
+            Add User Story
           </Typography>
           <TextField
             onChange={handleUserStoryPortion}
@@ -167,7 +167,7 @@ const AddBacklogInfo = () => {
             onClick={onAddClicked}
             disabled={emptyorundefined}
           >
-            ADD BACKLOG INFORMATION
+            ADD TO BACKLOG
           </Button>
           <Snackbar
             open={state.showMsg}

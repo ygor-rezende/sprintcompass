@@ -4,7 +4,9 @@ projects: [Project],
 teamMembers: [TeamMember],
 stories: [Backlog],
 sprints: [Sprint]
+subtasks: [Subtask]
 },
+
 type Project {
 teamName: String
 productName: String
@@ -14,10 +16,9 @@ estimatedNumStoryPoints: Float
 estimatedCost: Float
 },
 
-
-
 type Subtask {
 teamName: String
+story: String
 subtaskName: String
 hoursWorked: Float
 hoursToComplete: Float
@@ -56,7 +57,7 @@ type Mutation {
     addBacklog(userStoryPortion: String, priority: String, relativeEstimate: Float, estimatedCost: Float): Backlog,
     addSprint(name: String, status: String, items: String): Sprint,
     addMember(firstName: String, lastName: String): TeamMember,
-    addSubtask(teamName: String, subtaskName: String, hoursWorked: Float hoursToComplete: Float workInfo: String teamMember: String): Subtask,
+    addSubtask(teamName: String, story: String, subtaskName: String, hoursWorked: Float hoursToComplete: Float workInfo: String teamMember: String): Subtask,
     },
 `;
 export { schema };

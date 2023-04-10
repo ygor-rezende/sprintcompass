@@ -13,6 +13,14 @@ const resolvers = {
     let db = await dbRtns.getDBInstance();
     return await dbRtns.findAll(db, cfg.backlogCollection, {}, {});
   },
+  sprints: async () => {
+    let db = await dbRtns.getDBInstance();
+    return await dbRtns.findAll(db, cfg.sprintCollection, {}, {});
+  },
+  subtasks: async () => {
+    let db = await dbRtns.getDBInstance();
+    return await dbRtns.findAll(db, cfg.subtaskCollection, {}, {});
+  },
   addProject: async (args) => {
     let db = await dbRtns.getDBInstance();
     let project = {
@@ -60,6 +68,7 @@ const resolvers = {
     let db = await dbRtns.getDBInstance();
     let subtask = {
       teamName: args.teamName,
+      story: args.story,
       subtaskName: args.subtaskName,
       hoursWorked: args.hoursWorked,
       hoursToComplete: args.hoursToComplete,

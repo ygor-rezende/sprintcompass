@@ -18,7 +18,6 @@ const AddHoursWorked = () => {
   const initialState = {
     showMsg: false,
     snackbarMsg: "",
-    teamName: "",
     subtaskName: "",
     hoursWorked: 0,
     hoursToComplete: 0,
@@ -26,20 +25,28 @@ const AddHoursWorked = () => {
     teamMembers: [],
     selectedMember: "",
     optionskey: 1,
+    optionskey2: 2,
+    optionskey3: 3,
+    sprints: [],
+    selectedStory: "",
+    projects: [],
+    selectedTeam: "",
+    userStories: []
   };
 
   const reducer = (state, newState) => ({ ...state, ...newState });
   const [state, setState] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    loadTeamMembers();
+    loadData();
   }, []);
 
-  const loadTeamMembers = async () => {
+  const loadData = async () => {
     let myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
     try {
+      //Load Team members
       let query = JSON.stringify({
         query: "query {teamMembers{firstName,lastName}}",
       });
@@ -53,10 +60,51 @@ const AddHoursWorked = () => {
       });
       let json = await response.json();
       let team = json.data.teamMembers;
+
+
+      //Load Sprints and User stories
+      query = JSON.stringify({
+        query: "query {sprints{name,status,items}}",
+      });
+      console.log(query);
+      response = await fetch("http://localhost:4000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: query,
+      });
+      json = await response.json();
+      let sprints = json.data.sprints;
+      let userStories = [];
+      sprints.forEach(sprint => { 
+        let items = sprint.items.replaceAll("'",'"');
+        items = JSON.parse(items);
+        items.forEach(story => userStories.push({name: story.userStoryPortion, priority: story.priority}));
+      })
+
+      //Load team name information from projects table
+      query = JSON.stringify({
+        query: "query {projects{teamName}}",
+      });
+      console.log(query);
+      response = await fetch("http://localhost:4000/graphql", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+        },
+        body: query,
+      });
+      json = await response.json();
+      let projects = json.data.projects;
+      
       setState({
         showMsg: true,
-        snackbarMsg: `Found ${team.length} members.`,
+        snackbarMsg: `Found ${team.length} members, ${sprints.length} sprints, ${userStories.length} stories, and ${projects.length} teams.`,
         teamMembers: team,
+        sprints: sprints,
+        projects: projects,
+        userStories: userStories
       });
     } catch (error) {
       setState({
@@ -66,9 +114,15 @@ const AddHoursWorked = () => {
     }
   };
 
+
+
+
   const onAddClicked = async () => {
+    let story = JSON.stringify(state.selectedStory);
+    story = story.replaceAll('"', "'");
     let subtaskInfo = new Subtask(
-      state.teamName,
+      state.selectedTeam.teamName,
+      story,
       state.subtaskName,
       state.hoursWorked,
       state.hoursToComplete,
@@ -80,10 +134,10 @@ const AddHoursWorked = () => {
 
     try {
       let query = JSON.stringify({
-        query: `mutation {addSubtask(teamName: "${subtaskInfo.teamName}", subtaskName: "${subtaskInfo.subtaskName}", 
+        query: `mutation {addSubtask(teamName: "${subtaskInfo.teamName}", story: "${subtaskInfo.story}", subtaskName: "${subtaskInfo.subtaskName}", 
         hoursWorked: ${subtaskInfo.hoursWorked}, hoursToComplete: ${subtaskInfo.hoursToComplete}, 
         workInfo: "${subtaskInfo.workInfo}", teamMember: "${subtaskInfo.teamMember}")
-        {teamName, subtaskName, hoursWorked, hoursToComplete, workInfo, teamMember} }`,
+        {teamName, story, subtaskName, hoursWorked, hoursToComplete, workInfo, teamMember} }`,
       });
       console.log(query);
       let response = await fetch("http://localhost:4000/graphql", {
@@ -97,13 +151,15 @@ const AddHoursWorked = () => {
       setState({
         showMsg: true,
         snackbarMsg: `Added Subtask Information`,
-        teamName: "",
+        selectedTeam: "",
         subtaskName: "",
         hoursWorked: 0,
         hoursToComplete: 0,
         workInfo: "",
         selectedMember: "",
         optionskey: Math.random(),
+        optionskey2: Math.random(),
+        optionskey3: Math.random(),
       });
     } catch (error) {
       setState({
@@ -122,9 +178,6 @@ const AddHoursWorked = () => {
     });
   };
 
-  const handleTeamInput = (e) => {
-    setState({ teamName: e.target.value });
-  };
   const handleSubtaskInfoInput = (e) => {
     setState({ subtaskName: e.target.value });
   };
@@ -140,13 +193,27 @@ const AddHoursWorked = () => {
   const handleWorkInfoInput = (e) => {
     setState({ workInfo: e.target.value });
   };
+  const handleTeamName = (e) => {
+    setState({ selectedTeam: e.target.value });
+  };
+
+  const handleStory = (e) => {
+    setState({selectedStory: e.target.value})
+  }
   // const onChange = (e, selectedOption) => {
   //   setState({ workInfo: selectedOption });
   // };
 
   const emptyorundefined =
-    state.teamName === undefined ||
-    state.teamName === "" ||
+    state.selectedTeam === undefined ||
+    state.selectedTeam === "" ||
+    state.selectedTeam === null ||
+    state.selectedMember === undefined ||
+    state.selectedMember === "" ||
+    state.selectedMember === null ||
+    state.selectedStory === undefined ||
+    state.selectedStory === "" ||
+    state.selectedStory === null ||
     state.subtaskName === undefined ||
     state.subtaskName === "" ||
     state.hoursWorked === undefined ||
@@ -154,9 +221,7 @@ const AddHoursWorked = () => {
     state.hoursToComplete === undefined ||
     state.hoursToComplete === "" ||
     state.workInfo === undefined ||
-    state.workInfo === "" ||
-    state.teamMembers === undefined ||
-    state.teamMembers === "";
+    state.workInfo === "";
 
   return (
     <ThemeProvider theme={theme}>
@@ -182,12 +247,40 @@ const AddHoursWorked = () => {
             }}
           >
             Add Subtask Information
-          </Typography>
-          <TextField
-            onChange={handleTeamInput}
-            placeholder="Team's Name"
-            value={state.teamName}
-            style={{ width: "100%" }}
+          </Typography>         
+          <Autocomplete
+            key={state.optionskey}
+            options={state.projects}
+            getOptionLabel={(option) =>
+              `${option.teamName}`
+            }
+            onChange={(e, selectedOption) => {
+              handleTeamName({ target: { value: selectedOption } });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select a team"
+                variant="outlined"
+              />
+            )}
+          />
+          <Autocomplete
+            key={state.optionskey2}
+            options={state.userStories}
+            getOptionLabel={(option) =>
+              `${option.name}`
+            }
+            onChange={(e, selectedOption) => {
+              handleStory({ target: { value: selectedOption } });
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Select a user story"
+                variant="outlined"
+              />
+            )}
           />
           <TextField
             onChange={handleSubtaskInfoInput}
@@ -196,12 +289,14 @@ const AddHoursWorked = () => {
             style={{ width: "100%" }}
           />
           <TextField
+            label="Hours Worked"
             onChange={handleHoursWorked}
             placeholder="Hours Worked"
             value={state.hoursWorked}
             style={{ width: "100%" }}
           />
           <TextField
+            label="Estimated Time To Complete (Hours)"
             onChange={handleHoursToComplete}
             placeholder="Estimated Time To Complete (Hours)"
             value={state.hoursToComplete}
@@ -214,7 +309,7 @@ const AddHoursWorked = () => {
             style={{ width: "100%" }}
           />
           <Autocomplete
-            key={state.optionskey}
+            key={state.optionskey3}
             options={state.teamMembers}
             getOptionLabel={(option) =>
               `${option.firstName}, ${option.lastName}`
