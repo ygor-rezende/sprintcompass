@@ -1,6 +1,7 @@
 export default class Subtask {
     constructor(
       teamName,
+      story,
       subtaskName,
       hoursWorked,
       hoursToComplete,
@@ -8,6 +9,7 @@ export default class Subtask {
       teamMember
     ) {
       this.teamName = teamName;
+      this.story = story;
       this.subtaskName = subtaskName;
       this.hoursWorked = hoursWorked;
       this.hoursToComplete = hoursToComplete;

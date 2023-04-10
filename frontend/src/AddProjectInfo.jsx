@@ -145,7 +145,7 @@ const AddProjectInfo = () => {
               justifyContent: "center",
             }}
           >
-            Add Basic Story Information
+            Add New Project
           </Typography>
           <TextField
             onChange={handleTeamNameInput}

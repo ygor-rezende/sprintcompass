@@ -25,6 +25,7 @@ import ListTeamMember from "./ViewTeamMembers";
 import AddHoursWorked from "./AddHoursWorked";
 import AddSprint from "./AddSprint";
 import DisplayBacklog from "./DisplayBacklog";
+import ListTeamMemberData from "./ViewTeamMemberData";
 
 const App = () => {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -63,28 +64,7 @@ const App = () => {
                 to="/addbasic"
                 onClick={handleClose}
               >
-                Capture Basic Story Information
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/addbacklog"
-                onClick={handleClose}
-              >
-                Capture Backlog Information
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/displaybacklog"
-                onClick={handleClose}
-              >
-                Display Backlog
-              </MenuItem>
-              <MenuItem
-                component={NavLink}
-                to="/addsprint"
-                onClick={handleClose}
-              >
-                Create a Sprint
+                Capture Project Info
               </MenuItem>
               <MenuItem
                 component={NavLink}
@@ -102,10 +82,40 @@ const App = () => {
               </MenuItem>
               <MenuItem
                 component={NavLink}
+                to="/addbacklog"
+                onClick={handleClose}
+              >
+                Add User Story
+              </MenuItem>
+              <MenuItem
+                component={NavLink}
+                to="/displaybacklog"
+                onClick={handleClose}
+              >
+                Display Backlog
+              </MenuItem>
+              <MenuItem
+                component={NavLink}
+                to="/addsprint"
+                onClick={handleClose}
+              >
+                Create a Sprint
+              </MenuItem>
+              
+              
+              <MenuItem
+                component={NavLink}
                 to="/loghours"
                 onClick={handleClose}
               >
                 Log Hours Worked
+              </MenuItem>
+              <MenuItem
+                component={NavLink}
+                to="/teamdata"
+                onClick={handleClose}
+              >
+                Reports
               </MenuItem>
             </Menu>
           </Toolbar>
@@ -120,6 +130,7 @@ const App = () => {
           <Route path="/loghours" element={<AddHoursWorked />} />
           <Route path="/addsprint" element={<AddSprint />} />
           <Route path="/displaybacklog" element={<DisplayBacklog />} />
+          <Route path="/teamdata" element={<ListTeamMemberData />} />
         </Routes>
       </Router>
     </ThemeProvider>
