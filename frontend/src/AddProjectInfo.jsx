@@ -171,7 +171,13 @@ const AddProjectInfo = () => {
             value={state.numHoursStoryPoint}
             style={{ width: "100%" }}
           />
-          <Autocomplete
+          <TextField
+            onChange={handleEstimatedNumStoryPointsInput}
+            placeholder="Estimated Number of Story Points"
+            value={state.estimatedNumStoryPoints}
+            style={{ width: "100%" }}
+          />
+          {/* <Autocomplete
             value={state.estimatedNumStoryPoints}
             onChange={(event, newValue) => {
               handleEstimatedNumStoryPointsInput({
@@ -183,7 +189,7 @@ const AddProjectInfo = () => {
             renderInput={(params) => (
               <TextField {...params} label="Estimated Number of Story Points" />
             )}
-          />
+          /> */}
           <TextField
             onChange={handleEstimatedCostInput}
             placeholder="Estimated Cost"
